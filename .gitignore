@@ -1,0 +1,10 @@
+node_modules/
+# Tool-local persistence (JSON stores) is never committed...
+data/
+# ...except the shared library's static seed data (skills taxonomy, company registry).
+!/shared/data/
+.cache/
+.env
+.env.*
+.DS_Store
+*.log

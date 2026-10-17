@@ -1,0 +1,21 @@
+{
+  "name": "course-translator",
+  "version": "1.0.0",
+  "description": "Turn course codes into recruiter-searchable skill lines, ranked by real posting demand.",
+  "type": "module",
+  "main": "src/server.js",
+  "engines": { "node": ">=22" },
+  "scripts": {
+    "start": "node src/server.js",
+    "test": "node --test \"test/**/*.test.js\"",
+    "build-demand": "node scripts/build-demand.js",
+    "scrape-catalog": "node scripts/scrape-catalog.js"
+  },
+  "dependencies": {
+    "express": "4.21.2",
+    "mammoth": "1.13.0",
+    "pdf-parse": "1.1.1"
+  },
+  "license": "MIT",
+  "private": true
+}

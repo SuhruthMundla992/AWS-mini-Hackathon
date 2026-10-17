@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Turn the courses you've taken into the exact skills a company's live postings ask for." />
+  <title>Course Translator — app</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+
+  <header class="app-header">
+    <div class="wrap">
+      <a class="brand" href="/"><span class="logo" aria-hidden="true">◆</span> Course Translator</a>
+      <a class="back" href="/">← Home</a>
+    </div>
+  </header>
+
+  <div class="app-hero">
+    <div class="wrap">
+      <h1>Translate your courses into resume skills</h1>
+      <p>Pick what you've taken and who you're targeting. We scan that company's live postings and show the skills your courses prove.</p>
+    </div>
+  </div>
+
+  <main id="main" class="wrap">
+    <!-- ============ INPUT FORM ============ -->
+    <section aria-labelledby="form-heading" class="panel">
+      <h2 id="form-heading">Build your match</h2>
+      <p class="panel-intro">Five quick picks — most take one tap.</p>
+      <form id="translate-form" novalidate>
+        <div class="field">
+          <label for="school"><span class="step-chip" aria-hidden="true">1</span> School</label>
+          <select id="school" name="school" required aria-describedby="school-help">
+            <option value="">Loading schools…</option>
+          </select>
+          <p id="school-help" class="help">Pick the school whose catalog your courses come from.</p>
+        </div>
+
+        <div class="field">
+          <span class="field-label" id="courses-label"><span class="step-chip" aria-hidden="true">2</span> Courses you've taken</span>
+          <p id="courses-help" class="help">Pick a school first, then check the courses you've taken. Grouped by level.</p>
+          <div id="courses-picker" class="courses-picker" role="group" aria-labelledby="courses-label" aria-describedby="courses-help">
+            <p class="help muted">Choose a school to load its courses…</p>
+          </div>
+        </div>
+
+        <div class="field">
+          <label for="company"><span class="step-chip" aria-hidden="true">3</span> Target company</label>
+          <select id="company" name="company" required aria-describedby="company-help">
+            <option value="">Loading companies…</option>
+          </select>
+          <p id="company-help" class="help">We scan this company's live job postings right now.</p>
+        </div>
+
+        <div class="field">
+          <span class="field-label" id="employment-label"><span class="step-chip" aria-hidden="true">4</span> Role type</span>
+          <div class="radio-row" role="radiogroup" aria-labelledby="employment-label">
+            <label class="radio"><input type="radio" name="employment" value="intern" checked /> Internship</label>
+            <label class="radio"><input type="radio" name="employment" value="fulltime" /> Full-time</label>
+          </div>
+        </div>
+
+        <div class="field">
+          <label for="role"><span class="step-chip" aria-hidden="true">5</span> Role function</label>
+          <select id="role" name="role" required aria-describedby="role-help">
+            <option value="">Loading roles…</option>
+          </select>
+          <p id="role-help" class="help">e.g. Software Engineer. We match this company's postings for this function.</p>
+        </div>
+
+        <button type="submit" id="translate-btn" class="btn btn-primary btn-lg">
+          <span class="btn-label">Find my resume skills</span>
+          <span class="spinner" aria-hidden="true" hidden></span>
+        </button>
+      </form>
+      <p id="status" class="status" role="status" aria-live="polite"></p>
+    </section>
+
+    <!-- ============ RESULTS ============ -->
+    <section aria-labelledby="results-heading" class="panel" id="results-section" hidden>
+      <h2 id="results-heading" tabindex="-1">Your results</h2>
+      <p id="results-meta" class="meta"></p>
+      <div id="scope-note" class="notice notice-warn" hidden></div>
+
+      <div class="output-grid">
+        <article class="output-card" aria-labelledby="coursework-heading">
+          <div class="output-head">
+            <h3 id="coursework-heading">Relevant Coursework</h3>
+            <div class="output-controls">
+              <div class="toggle" role="group" aria-label="Relevant Coursework format">
+                <button type="button" class="toggle-btn is-active" data-panel="coursework" data-format="text" aria-pressed="true">Plain text</button>
+                <button type="button" class="toggle-btn" data-panel="coursework" data-format="latex" aria-pressed="false">LaTeX</button>
+              </div>
+              <button type="button" class="btn-copy" data-copy="coursework">Copy</button>
+            </div>
+          </div>
+          <pre id="coursework-output" class="output-text" tabindex="0" aria-live="off"></pre>
+        </article>
+
+        <article class="output-card" aria-labelledby="skills-heading">
+          <div class="output-head">
+            <h3 id="skills-heading">Skills</h3>
+            <div class="output-controls">
+              <div class="toggle" role="group" aria-label="Skills format">
+                <button type="button" class="toggle-btn is-active" data-panel="skills" data-format="text" aria-pressed="true">Plain text</button>
+                <button type="button" class="toggle-btn" data-panel="skills" data-format="latex" aria-pressed="false">LaTeX</button>
+              </div>
+              <button type="button" class="btn-copy" data-copy="skills">Copy</button>
+            </div>
+          </div>
+          <pre id="skills-output" class="output-text" tabindex="0" aria-live="off"></pre>
+        </article>
+      </div>
+
+      <div id="unmatched" class="notice notice-warn" hidden></div>
+
+      <h3 class="section-subhead">Course breakdown</h3>
+      <p class="help">Each skill is backed by a sentence from your school's public catalog, and ranked by how often this company's matching postings ask for it.</p>
+      <div id="courses" class="courses"></div>
+
+      <details class="postings-panel" id="postings-panel" hidden>
+        <summary><strong>Postings we scanned</strong></summary>
+        <div id="postings-grid" class="postings-grid"></div>
+      </details>
+    </section>
+
+    <!-- ============ RESUME TAILORING ============ -->
+    <section aria-labelledby="resume-heading" class="panel" id="resume-section" hidden>
+      <h2 id="resume-heading">Drop these into your resume</h2>
+      <p class="panel-intro">Paste your resume's <strong>LaTeX source</strong> to edit only the Coursework/Skills lines in place (your formatting stays identical), or upload a PDF/DOCX/text resume to get a clean LaTeX version with your tailored lines.</p>
+      <form id="resume-form" novalidate>
+        <div class="field">
+          <label for="resume-text">Paste resume text or LaTeX</label>
+          <textarea id="resume-text" rows="6" placeholder="\documentclass{article} ... or just paste your resume text"></textarea>
+        </div>
+        <p class="file-or">— or —</p>
+        <div class="field">
+          <label for="resume-file">Upload a file (.tex, .pdf, .docx, .txt)</label>
+          <input type="file" id="resume-file" accept=".tex,.pdf,.docx,.txt,.md" />
+        </div>
+        <button type="submit" id="resume-btn" class="btn btn-primary">
+          <span class="btn-label">Tailor my resume</span>
+          <span class="spinner" aria-hidden="true" hidden></span>
+        </button>
+      </form>
+      <p id="resume-status" class="status" role="status" aria-live="polite"></p>
+
+      <div id="resume-result" hidden>
+        <div class="injected" id="resume-injected"></div>
+        <ul class="resume-notes" id="resume-notes"></ul>
+        <div class="output-head" style="margin-top:14px;">
+          <h3>Your tailored LaTeX</h3>
+          <div class="output-controls">
+            <button type="button" class="btn-copy" data-copy="resume">Copy</button>
+            <button type="button" class="btn-copy" id="resume-download">Download .tex</button>
+          </div>
+        </div>
+        <pre id="resume-latex" class="output-text" tabindex="0"></pre>
+      </div>
+    </section>
+
+    <!-- ============ ASSIGNMENT → BULLET ============ -->
+    <section aria-labelledby="assignment-heading" class="panel">
+      <h2 id="assignment-heading">Turn an assignment into a bullet</h2>
+      <p class="panel-intro">Paste what you built or did. You get one honest resume bullet that uses only your own words — no invented tools or metrics.</p>
+      <form id="assignment-form" novalidate>
+        <div class="field">
+          <label for="assignment-text">Assignment description</label>
+          <textarea id="assignment-text" rows="4" placeholder="Built a multithreaded file server in C that handled concurrent client requests over TCP sockets." aria-describedby="assignment-help" required></textarea>
+          <p id="assignment-help" class="help">Optional: picking a school + courses above helps align the wording.</p>
+        </div>
+        <button type="submit" id="assignment-btn" class="btn btn-primary">
+          <span class="btn-label">Make a bullet</span>
+          <span class="spinner" aria-hidden="true" hidden></span>
+        </button>
+      </form>
+      <p id="assignment-status" class="status" role="status" aria-live="polite"></p>
+      <div id="assignment-result" hidden>
+        <div class="output-head">
+          <h3>Your bullet</h3>
+          <button type="button" class="btn-copy" data-copy="bullet">Copy</button>
+        </div>
+        <pre id="bullet-output" class="output-text" tabindex="0"></pre>
+        <p id="bullet-note" class="note"></p>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="wrap">
+      <p class="privacy"><strong>Your privacy:</strong> nothing you type is stored. No account, no sign-in. Everything is processed in memory for this one request and then gone.</p>
+      <p class="credit">Skills come from your school's public course catalog. Demand percentages are counted from real job postings — never guessed by AI.</p>
+    </div>
+  </footer>
+
+  <script src="app.js"></script>
+</body>
+</html>

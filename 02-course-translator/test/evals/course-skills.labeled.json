@@ -1,0 +1,18 @@
+{
+  "_note": "Hand-labeled expected skill ids for TAMU CSCE courses, read from the real catalog descriptions in seed/catalogs/tamu.json. Labels are the skills a reader would expect the catalog sentence to justify; used to measure extractSkills recall/precision in test/evals.test.js.",
+  "schoolId": "tamu",
+  "labels": {
+    "CSCE 313": ["systems-programming", "networking", "concurrency", "security"],
+    "CSCE 221": ["data-structures", "algorithms", "complexity"],
+    "CSCE 421": ["machine-learning", "deep-learning", "statistics", "optimization"],
+    "CSCE 463": ["networking", "concurrency", "security"],
+    "CSCE 410": ["operating-systems"],
+    "CSCE 434": ["compilers"],
+    "CSCE 310": ["databases"],
+    "CSCE 441": ["graphics"],
+    "CSCE 471": ["nlp"],
+    "CSCE 435": ["concurrency"],
+    "CSCE 420": ["artificial-intelligence"],
+    "CSCE 465": ["security", "networking"]
+  }
+}

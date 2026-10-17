@@ -1,0 +1,26 @@
+{
+  "name": "careertools-shared",
+  "version": "1.0.0",
+  "description": "Shared plumbing for the six career tools: ATS board fetchers, skill extraction, resume parsing, company registry, LLM wrapper.",
+  "type": "module",
+  "main": "src/index.js",
+  "exports": {
+    ".": "./src/index.js"
+  },
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "test": "node --test test/",
+    "verify-registry": "node scripts/verify-registry.js",
+    "build-fixtures": "node scripts/build-fixtures.js",
+    "smoke": "node scripts/smoke.js"
+  },
+  "dependencies": {
+    "@aws-sdk/client-bedrock-runtime": "3.1152.0",
+    "mammoth": "1.13.0",
+    "pdf-parse": "1.1.1"
+  },
+  "license": "MIT",
+  "private": true
+}
